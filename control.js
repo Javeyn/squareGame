@@ -5,6 +5,31 @@ var controller;
 var rectangle;
 var loop;
 
+function jumpSwitch() {
+
+
+    if (rectangle.grav === true) {
+        rectangle.y_velocity -= 10
+
+    }
+
+    else {
+        rectangle.y_velocity += 10
+    }
+
+
+}
+function gravSwitch() {
+    if (rectangle.grav === true) {
+        rectangle.y_velocity += 1.5
+
+    }
+
+    else {
+        rectangle.y_velocity -= 1.5
+    }
+}
+
 context = document.querySelector("canvas").getContext("2d");
 context.canvas.height = 180;
 context.canvas.width = 320;
@@ -16,7 +41,8 @@ rectangle = {//determines the size of the rectangle, as well as its velocity
     x: 144,
     x_velocity: 0,
     y: 0,
-    y_velocity: 0
+    y_velocity: 0,
+    grav: true
 };
 
 controller = {
@@ -29,7 +55,7 @@ controller = {
 
         // this is the function for listening for keypresses, it is tied to an event listener at the bottom
 
-        var key_state = (event.type == "keydown") ?true : false;
+        var key_state = (event.type == "keydown") ? true : false;
         switch (event.keyCode) {
             case 37:
                 //leftkey
@@ -38,6 +64,7 @@ controller = {
             case 38:
                 //upkey
                 controller.up = key_state;
+
                 break;
             case 39:
                 //rightkey
@@ -47,23 +74,38 @@ controller = {
     }
 };
 
-loop =function() {
+loop = function () {
     if (controller.up && rectangle.jumping == false) {
-        rectangle.y_velocity -=20;
+        jumpSwitch();
         rectangle.jumping = true;
+        switch (controller.up) {
+            case (rectangle.grav):
+                rectangle.grav = false;
+                console.log(rectangle.grav);
+                break;
+            case (rectangle.grav = false):
+                rectangle.grav = true;
+                console.log(rectangle.grav);
+                break;
+            default:
+                rectangle.grav = true;
+                console.log(rectangle.grav)
+                break;
+        }
         //if the up key is pressed, and the rectangle ISNT jumping, it will now jump and change jumping to true
     }
     if (controller.left) {
-        rectangle.x_velocity-=0.5;
+        rectangle.x_velocity -= 0.5;
         //decreases x velocity to make the object go left
     }
     if (controller.right) {
-        rectangle.x_velocity +=0.5;
+        rectangle.x_velocity += 0.5;
         //increases x velocity to make the object go right
     }
     //by decreasing and increasing velocity instead of setting it to a set number, you get fluid motion instead of choppy blocky motion
 
-    rectangle.y_velocity +=1.5; //gravity effect
+    // rectangle.y_velocity += 1.5; //gravity effect
+    gravSwitch();
     //every frame of animation 1.5 is added to the rectangle y position. this causes the rectangle to fall until it reaches the bottom
     rectangle.x += rectangle.x_velocity;
     rectangle.y += rectangle.y_velocity;
@@ -72,8 +114,8 @@ loop =function() {
     //slows down the velocity on button release to simulate a gradual slow down, and prevents the Denis Effect
 
 
-      //this prevents the rectangle from dropping below the floor
-      if (rectangle.y > 180 - 16 - 32) {
+    //this prevents the rectangle from dropping below the floor
+    if (rectangle.y > 180 - 16 - 32) {
         // 180 is bottom of screen, 16 is the floor, and 32 is the top of the rectangle
         rectangle.jumping = false;
         // allows player to jump again once they hit the floor
