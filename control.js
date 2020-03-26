@@ -72,15 +72,19 @@ loop =function() {
     //slows down the velocity on button release to simulate a gradual slow down, and prevents the Denis Effect
 
 
-    //y axis collision detection
-
-    //this prevents the rectangle from dropping below the floor
-    if (rectangle.y > 180 - 16 - 32) {
+      //this prevents the rectangle from dropping below the floor
+      if (rectangle.y > 180 - 16 - 32) {
         // 180 is bottom of screen, 16 is the floor, and 32 is the top of the rectangle
-        rectangle.jumping=false;
+        rectangle.jumping = false;
         // allows player to jump again once they hit the floor
         rectangle.y = 180 - 16 - 32;
         rectangle.y_velocity = 0;
+    }
+
+    if (rectangle.y < 0 + 16) {
+        rectangle.jumping = false;
+        rectangle.y = 0 + 16;
+        rectangle.y_velocity = 0
     }
     //this prevents the rectangle from leaving the screen horizontally, creates a wrapping/looping effect
     if (rectangle.x < -32) {
@@ -103,6 +107,14 @@ loop =function() {
     context.moveTo(0, 164);
     context.lineTo(320, 164);
     context.stroke();
+    //draws the ceiling
+    context.strokeStyle = "#202830";
+    context.lineWidth = 4;
+    context.beginPath();
+    context.moveTo(0, 16);
+    context.lineTo(320, 16);
+    context.stroke();
+
 
     window.requestAnimationFrame(loop); //starts the loop
 };
