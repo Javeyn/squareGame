@@ -1,4 +1,5 @@
 //creating blank variables as placeholders to define later
+//jacob is cool
 
 var context;
 var controller;
